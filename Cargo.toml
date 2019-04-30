@@ -1,0 +1,7 @@
+[package]
+name = "lc"
+version = "0.1.0"
+authors = ["Zili Xiang <zx77@cornell.edu>"]
+edition = "2018"
+
+[dependencies]
