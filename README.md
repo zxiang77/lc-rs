@@ -1,2 +1,2 @@
 # lc-rs
-Practice Rust by solving lc problems.
+Practice Rust by solving algorithm problems.

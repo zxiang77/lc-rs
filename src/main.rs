@@ -1,13 +1,16 @@
-use std::rc::Rc;
-use std::cell::RefCell;
-
 mod utils;
-use utils::node::TreeNode;
 
 mod sol;
-use sol::q1028::Solution;
 fn main() {
+    let mut v = vec![];
+    v.push(1);
+    v.push(2);
+    v.push(3);
+    println!("{}", v[0]);
+    println!("{}", v[1]);
+    println!("{}", v[2]);
 
-    Solution::test()
+    v.pop();
+    println!("{}", v[0]);
 }
 
