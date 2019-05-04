@@ -1,7 +1,9 @@
 use std::rc::Rc;
 use std::cell::RefCell;
 use super::super::utils::node::TreeNode;
-use std::mem;
+use std::collections::HashMap;
+use core::borrow::Borrow;
+
 pub struct Solution {
 
 }
@@ -24,13 +26,15 @@ impl Solution {
 
             let parent= stack.get(1).unwrap();
         }
+        let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
 
+        let h = shared_map.borrow_mut();
         match root {
             Some(r) => Some(Rc::new(r)),
             None => None
         }
     }
-
+    /// https://doc.rust-lang.org/1.8.0/book/lifetimes.html the lifetime link to read
     fn nxt(s: &str) -> (Option<RefCell<TreeNode>>, usize, &str) {
         let mut ctr : usize = 0;
 
@@ -46,14 +50,28 @@ impl Solution {
         (node, ctr, s.get(ctr..).unwrap())
     }
 
-    fn t2() -> &'static i32 {
-        let x = 33;
-        &x
-    }
+//    fn t2() -> &'static i32 {
+//        let x = 33;
+//        &x
+//    }
 
     pub fn test() {
-        let v = vec![];
-        v.iter();
-        v.into_iter();
+        for (k, v) in Solution::get_data() {
+            assert_eq!(Solution::recover_from_preorder(k).unwrap().into_inner().borrow(), &v)
+        }
+    }
+
+    pub fn get_data() -> HashMap<String, TreeNode>
+    {
+        let mut data = HashMap::new();
+        let input1 = String::from("23");
+        let res1 = TreeNode::new(23);
+        data.insert(input1, res1);
+
+        let input2 = String::from("23-3");
+        let mut res2 = TreeNode::new(23);
+        res2.left = Some(Rc::new(RefCell::new(TreeNode::new(3))));
+        data.insert(input2, res2);
+        data
     }
 }
