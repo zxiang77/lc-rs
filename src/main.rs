@@ -9,6 +9,4 @@ fn main() {
         *y += 1;
     }
     println!("{}", x);
-    utils::node::test_eq()
 }
-
