@@ -26,9 +26,7 @@ impl Solution {
 
             let parent= stack.get(1).unwrap();
         }
-        let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
 
-        let h = shared_map.borrow_mut();
         match root {
             Some(r) => Some(Rc::new(r)),
             None => None
@@ -56,9 +54,9 @@ impl Solution {
 //    }
 
     pub fn test() {
-        for (k, v) in Solution::get_data() {
-            assert_eq!(Solution::recover_from_preorder(k).unwrap().into_inner().borrow(), &v)
-        }
+        /*for (k, v) in Solution::get_data() {
+//            assert_eq!(Solution::recover_from_preorder(k).unwrap().into_inner().borrow(), &v)
+        }*/
     }
 
     pub fn get_data() -> HashMap<String, TreeNode>

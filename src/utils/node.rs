@@ -27,23 +27,27 @@ impl PartialEq for TreeNode {
             return false
         }
 
-        let sl = self.left;
-        let sr = self.right;
-
-        let comparator = |a: Option<Rc<RefCell<TreeNode>>>, b: Option<Rc<RefCell<TreeNode>>>| -> bool {
-            if a == b {
+        let comparator = |a: &Option<Rc<RefCell<TreeNode>>>, b: &Option<Rc<RefCell<TreeNode>>>| -> bool {
+            if *a == *b {
                 return true;
             }
 
-            if a == None || b == None {
+            if *a == None || *b == None {
                 return false;
+
             }
 
-            let al = a.unwrap().borrow().borrow();
+            let av = match a {
+                Some(aref) => aref.borrow().borrow(),
+                _ => panic!("")
+            };
 
-            a.unwrap().borrow().borrow() == b.unwrap().borrow().borrow()
+//            let al = &Rc::try_unwrap(a.unwrap()).unwrap().into_inner();
+//            let al = (*a.unwrap()).into_inner();
+            true
         };
 
-        comparator(self.left, other.left) && comparator(self.right, other.right)
+//        let jj = Some;
+        comparator(&self.left, &other.left) && comparator(&self.right, &other.right)
     }
 }
