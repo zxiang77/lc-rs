@@ -6,6 +6,7 @@ use core::borrow::Borrow;
 #[derive(Debug)]
 pub struct TreeNode {
     pub val: i32,
+    // option for null support, Rc for multiple reference,
     pub left: Option<Rc<RefCell<TreeNode>>>,
     pub right: Option<Rc<RefCell<TreeNode>>>,
 }
@@ -20,6 +21,7 @@ impl TreeNode {
         }
     }
 }
+
 
 impl PartialEq for TreeNode {
     fn eq(&self, other: &TreeNode) -> bool {
@@ -37,17 +39,37 @@ impl PartialEq for TreeNode {
 
             }
 
-            let av = match a {
-                Some(aref) => aref.borrow().borrow(),
-                _ => panic!("")
-            };
-
 //            let al = &Rc::try_unwrap(a.unwrap()).unwrap().into_inner();
 //            let al = (*a.unwrap()).into_inner();
-            true
+//            let j = &a.unwrap();
+            a.as_ref().unwrap() == b.as_ref().unwrap()
+//            &Rc::clone(a.as_ref().unwrap()) == &Rc::clone(&b.as_ref().unwrap())
         };
 
 //        let jj = Some;
         comparator(&self.left, &other.left) && comparator(&self.right, &other.right)
     }
+}
+
+pub fn test_eq() {
+    let t1 = TreeNode::new(5);
+
+
+
+    assert_eq!(get_tree() == get_tree(), true)
+}
+
+fn get_tree() -> TreeNode {
+    let mut node1 = TreeNode::new(5);
+    let mut node2 = TreeNode::new(6);
+    let mut node3 = TreeNode::new(4);
+    let mut node4 = TreeNode::new(3);
+    let mut node5 = TreeNode::new(2);
+
+    node3.left = Some(Rc::new(RefCell::new(node4)));
+    node3.right = Some(Rc::new(RefCell::new(node5)));
+    node1.left = Some(Rc::new(RefCell::new(node3)));
+    node1.right = Some(Rc::new(RefCell::new(node2)));
+
+    node1
 }

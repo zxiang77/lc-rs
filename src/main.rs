@@ -1,6 +1,7 @@
 mod utils;
 
 mod sol;
+
 fn main() {
     let mut x = 5;
     {
@@ -8,5 +9,6 @@ fn main() {
         *y += 1;
     }
     println!("{}", x);
+    utils::node::test_eq()
 }
 
