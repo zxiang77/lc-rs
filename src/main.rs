@@ -2,11 +2,16 @@ mod utils;
 
 mod sol;
 
+use std::cell::RefCell;
+
+struct TheDarkKnight;
+
+impl TheDarkKnight {
+    fn nothing_is_true(self) {}
+}
+
 fn main() {
-    let mut x = 5;
-    {
-        let y = &mut x;
-        *y += 1;
-    }
-    println!("{}", x);
+//    let x = RefCell::new(TheDarkKnight);
+//
+//    x.borrow().nothing_is_true(); // error: cannot move out of borrowed content
 }

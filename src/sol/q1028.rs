@@ -10,53 +10,77 @@ pub struct Solution {
 
 impl Solution {
     pub fn recover_from_preorder(s: String) -> Option<Rc<RefCell<TreeNode>>> {
-        let mut stack : Vec<RefCell<TreeNode>> = vec![];
+        let (node, dep, remain) = Solution::parse_next(&s);
 
-        // init
-        let (root, dep, st) = Solution::nxt(&s);
+        let mut stack : Vec<Rc<RefCell<TreeNode>>> = vec![];
+        stack.push(Rc::clone(node.as_ref().unwrap()));
 
-        while st.len() > 0 {
-            let (root, dep2, st) = Solution::nxt(st);
-            let v = root.unwrap();
+        while remain.len() > 0 { // the stack size == current depth
+            let (node2, dep2, remain) = Solution::parse_next(remain);
+            match node2 {
+                None => break,
+                Some(n) => {
+                    while stack.len() > dep2 {
+                        stack.pop();
+                    }
 
-            let _ = stack.push(v);
-            while dep2 <= stack.len() {
-                let _ = stack.pop();
+                    let mut cur = Solution::peek(&stack);
+                    stack.push(Rc::clone(&n));
+
+                    if cur.borrow_mut().left == None {
+                        cur.borrow_mut().left = Some(n);
+                    } else {
+                        cur.borrow_mut().right = Some(n);
+                    }
+                }
             }
-
-            let parent= stack.get(1).unwrap();
         }
 
-        match root {
-            Some(r) => Some(Rc::new(r)),
-            None => None
-        }
+        node
+
     }
+
+    fn peek(v: &Vec<Rc<RefCell<TreeNode>>>) -> Rc<RefCell<TreeNode>> {
+        let l = v.len();
+        Rc::clone(&v[l - 1])
+    }
+
     /// https://doc.rust-lang.org/1.8.0/book/lifetimes.html the lifetime link to read
-    fn nxt(s: &str) -> (Option<RefCell<TreeNode>>, usize, &str) {
-        let mut ctr : usize = 0;
-
-        while  !"-".eq(&s[ctr..ctr]) {
-            ctr += 1
+    fn parse_next(s: &str) -> (Option<Rc<RefCell<TreeNode>>>, usize, &str) {
+        let mut start = 0;
+        while s.chars().nth(start) != Some('-') {
+            start += 1;
         }
 
-        let node = match s.get(0..ctr).unwrap().to_string().parse::<i32>() {
-            Ok(x) => Some(RefCell::new(TreeNode::new(x))),
-            Err(_) => None
-        };
+        if start == 0 {
+            return (None, 0, s);
+        }
 
-        (node, ctr, s.get(ctr..).unwrap())
+        let num = s[0..start].parse::<i32>().unwrap();
+        let node = Some(Rc::new(RefCell::new(TreeNode::new(num))));
+        let mut ctr = start;
+        while s.chars().nth(ctr) == Some('-') {
+            ctr += 1;
+        }
+        let j = &s[ctr..];
+
+        (node, ctr - start, j)
+
     }
 
-//    fn t2() -> &'static i32 {
-//        let x = 33;
-//        &x
-//    }
 
+}
+
+#[cfg(test)]
+mod q1028_test {
+    use super::*;
+    #[test]
     pub fn test() {
-        /*for (k, v) in Solution::get_data() {
-//            assert_eq!(Solution::recover_from_preorder(k).unwrap().into_inner().borrow(), &v)
-        }*/
+        for (k, v) in self::get_data() {
+            let clone = String::clone(&k);
+            assert_eq!(Solution::recover_from_preorder(k).unwrap(), Rc::new(RefCell::new(v)));
+            println!("done {}", clone)
+        }
     }
 
     pub fn get_data() -> HashMap<String, TreeNode>
